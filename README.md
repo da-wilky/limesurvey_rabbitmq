@@ -2,6 +2,9 @@
 
 Send the SurveyID to RabbitMQ after completion. RabbitMQ can provide flexible further handling.
 
+In my case I use the surveyID externally to request limesurvey for survey data & responses and upload those to nextcloud.
+It is also possible to directly upload them on click, but then the user has to wait for the upload of the file to finish. That way he only needs to wait for a minimal text message to send.
+
 ## Plugin Installation
 
 ### Download Zip-File
