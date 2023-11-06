@@ -6,8 +6,8 @@
         <creationDate>2023-11-06</creationDate>
         <last_update>2023-11-06</last_update>
         <author>Sameul Wilk</author>
-        <authorUrl></authorUrl>
-        <supportUrl></supportUrl>
+        <authorUrl>https://github.com/da-wilky/limesurvey_rabbitmq</authorUrl>
+        <supportUrl>https://github.com/da-wilky/limesurvey_rabbitmq</supportUrl>
         <license></license>
         <version>1.0.0</version>
         <description>Connect Limesurvey with RabbitMQ.</description>
