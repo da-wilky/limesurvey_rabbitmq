@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  lime_rabbitmq:
+    container_name: lsrmq
+    build: .
+    volumes:
+      - ./Lime_RabbitMQ:/Lime_RabbitMQ
+      - ./output:/output

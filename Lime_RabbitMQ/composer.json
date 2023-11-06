@@ -1,0 +1,14 @@
+{
+    "name": "sw/lime_rabbitmq",
+    "description": "Send SurveyID to RabbitMQ after completion.",
+    "type": "library",
+    "require": {
+        "php-amqplib/php-amqplib": "^3.6"
+    },
+    "license": "AGPL",
+    "authors": [
+        {
+            "name": "Samuel Wilk"
+        }
+    ]
+}
