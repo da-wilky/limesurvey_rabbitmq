@@ -84,6 +84,25 @@ class Lime_RabbitMQ extends PluginBase
                 'default' => array('xls'),
             ),
             /*
+             *      TEXTOVERVIEW
+             */
+            'heading_textoverview' => array(
+                'type' => 'info',
+                'content' => '<h1>' . $this->gT('Textoverview') . '</h1><p>' . $this->gT('Please provide settings in case you want to export textoverview files.') . '</p>'
+            ),
+            'exportTextoverview' => array(
+                'type' => 'boolean',
+                'label' => $this->gT('Export textoverview'),
+                'default' => false,
+                'help' => $this->gT('Export textoverview to a file.')
+            ),
+            'filename_textoverview' => array(
+                'type' => 'string',
+                'label' => $this->gT('Filename Textoverview'),
+                'default' => 'overview',
+                'help' => $this->gT('The filename will be used to save the file.')
+            ),
+            /*
              *      STATISTICS
              */
             'heading_statistics' => array(
@@ -221,6 +240,14 @@ class Lime_RabbitMQ extends PluginBase
             $data->answers = $answers;
         }
 
+        $exportTextoverview = $this->_getSurveyField($surveyId, 'exportTextoverview');
+        if ($exportTextoverview) {
+            $textoverview = new stdClass();
+            $textoverview->filename = $this->_getSurveyField($surveyId, 'filename_textoverview');
+            $textoverview->questionArray = $this->get('questionArray_textoverview', 'Survey', $surveyId, array());
+            $data->textoverview = $textoverview;
+        }
+
         $exportStatistics = $this->_getSurveyField($surveyId, 'exportStatistics');
         if ($exportStatistics) {
             $statistics = new stdClass();
@@ -303,6 +330,15 @@ class Lime_RabbitMQ extends PluginBase
                 $questionArray[$q->GetBasicFieldName()] = $q->questionl10ns[$sLanguage]->question;
             } else {
                 $questionArray[$q->GetBasicFieldName()] = $q->title;
+            }
+        }
+
+        $questionArrayTextOverview = array();
+        foreach ($questions as $q) {
+            if (isset($q->questionl10ns) && isset($q->questionl10ns[$sLanguage])) {
+                $questionArrayTextOverview[$q->title] = $q->questionl10ns[$sLanguage]->question;
+            } else {
+                $questionArrayTextOverview[$q->title] = $q->title;
             }
         }
 
@@ -399,6 +435,49 @@ class Lime_RabbitMQ extends PluginBase
                         ),
                         'label' => $this->gT('All Question / Table Fields that should be present.'),
                         'current' => $this->get('questionArray', 'Survey', $surveyId, array_keys($questionArray)),
+                    ),
+                    /*
+                     *      TEXTOVERVIEW
+                     */
+                    'heading_textoverview' => array(
+                        'type' => 'info',
+                        'content' => '<h1>' . $this->gT('Textoverview') . '</h1><p>' . $this->gT('Please provide settings in case you want to export textoverview files.') . '</p>'
+                    ),
+                    'exportTextoverview' => array(
+                        'type' => 'boolean',
+                        'label' => $this->gT('Export textoverview'),
+                        'current' => $this->get(
+                            'exportTextoverview',
+                            'Survey',
+                            $surveyId,
+                            $this->get('exportTextoverview')
+                        ),
+                        'help' => $this->gT('Export textoverview to a file.')
+                    ),
+                    'filename_textoverview' => array(
+                        'type' => 'string',
+                        'label' => $this->gT('Filename Textoverview'),
+                        'current' => $this->get(
+                            'filename_textoverview',
+                            'Survey',
+                            $surveyId,
+                            $this->get('filename_textoverview')
+                        ),
+                        'help' => $this->gT('The filename will be used to save the file.')
+                    ),
+                    'questionArray_textoverview' => array(
+                        'type' => 'select',
+                        'options' => $questionArrayTextOverview,
+                        'htmlOptions' => array(
+                            'multiple' => true,
+                            'placeholder' => $this->gT("None"),
+                            'unselectValue' => "",
+                        ),
+                        'selectOptions' => array(
+                            'placeholder' => $this->gT("None"),
+                        ),
+                        'label' => $this->gT('All Question / Table Fields that should get an text overview generated.'),
+                        'current' => $this->get('questionArray_textoverview', 'Survey', $surveyId, array_keys($questionArrayTextOverview)),
                     ),
                     /*
                      *      STATISTICS
