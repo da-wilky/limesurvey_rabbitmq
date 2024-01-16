@@ -38,12 +38,12 @@ class Lime_RabbitMQ extends PluginBase
     {
         $this->settings = [
             // General
-            'path' => array(
-                'type' => 'string',
-                'label' => $this->gT('Path to save'),
-                'default' => 'LimeSurvey',
-                'help' => $this->gT('The folders with the files for the survey will be saved in this folder.')
-            ),
+            // 'path' => array(
+            //     'type' => 'string',
+            //     'label' => $this->gT('Path to save'),
+            //     'default' => 'LimeSurvey',
+            //     'help' => $this->gT('The folders with the files for the survey will be saved in this folder.')
+            // ),
             /*
              *      ANSWERS
              */
@@ -209,8 +209,8 @@ class Lime_RabbitMQ extends PluginBase
         $data = new stdClass();
         $data->id = $surveyId;
 
-        $path = $this->get('path');
-        $data->path = $path;
+        // $path = $this->get('path');
+        // $data->path = $path;
 
         $exportAnswers = $this->_getSurveyField($surveyId, 'exportAnswers');
         if ($exportAnswers) {
