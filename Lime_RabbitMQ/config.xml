@@ -9,7 +9,7 @@
         <authorUrl>https://github.com/da-wilky/limesurvey_rabbitmq</authorUrl>
         <supportUrl>https://github.com/da-wilky/limesurvey_rabbitmq</supportUrl>
         <license>MIT License</license>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
         <description>Connect Limesurvey with RabbitMQ.</description>
     </metadata>
 
