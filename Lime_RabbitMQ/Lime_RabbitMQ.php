@@ -478,7 +478,7 @@ class Lime_RabbitMQ extends PluginBase
                     ),
                     'questionArray_textoverview' => array(
                         'type' => 'select',
-                        'options' => $questionArray,
+                        'options' => $questionArrayFields,
                         'htmlOptions' => array(
                             'multiple' => true,
                             'placeholder' => $this->gT("None"),
@@ -488,7 +488,7 @@ class Lime_RabbitMQ extends PluginBase
                             'placeholder' => $this->gT("None"),
                         ),
                         'label' => $this->gT('All Question / Table Fields that should get an text overview generated.'),
-                        'current' => $this->get('questionArray_textoverview', 'Survey', $surveyId, array_keys($questionArray)),
+                        'current' => $this->get('questionArray_textoverview', 'Survey', $surveyId, array_keys($questionArrayFields)),
                     ),
                     /*
                      *      STATISTICS
