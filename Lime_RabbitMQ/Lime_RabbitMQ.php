@@ -297,6 +297,15 @@ class Lime_RabbitMQ extends PluginBase
         $this->updateTable($surveyId);
     }
 
+    private function _getFieldName($question)
+    {
+        $fieldName = $question->GetBasicFieldName();
+        if ($question->parent_qid != 0) {
+            $fieldName .= $question->title;
+        }
+        return $fieldName;
+    }
+
     /**
      * @return void
      */
@@ -315,7 +324,7 @@ class Lime_RabbitMQ extends PluginBase
         $oSurvey = Survey::model()->findByPk($surveyId);
         $sLanguage = $oSurvey->language;
 
-        $questionArray = array(
+        $questionArrayBasics = array(
             "id" => $this->gT("ID"),
             "submitdate" => $this->gT("Submitdate"),
             "lastpage" => $this->gT("Lastpage"),
@@ -324,23 +333,25 @@ class Lime_RabbitMQ extends PluginBase
             "startdate" => $this->gT("Startdate"),
             "datestamp" => $this->gT("Datestamp"),
         );
+        $questionArrayFields = array();
         $questions = $oSurvey->getAllQuestions();
         foreach ($questions as $q) {
+            $fieldName = $this->_getFieldName($q);
+            $title = $q->title;
             if (isset($q->questionl10ns) && isset($q->questionl10ns[$sLanguage])) {
-                $questionArray[$q->GetBasicFieldName()] = $q->questionl10ns[$sLanguage]->question;
-            } else {
-                $questionArray[$q->GetBasicFieldName()] = $q->title;
+                $title = $q->questionl10ns[$sLanguage]->question;
+            }
+            // Dont add this field if its type F (Array) type Q (Multiple Short Text)
+            if ($q->type != "F" && $q->type != "Q") {
+                $questionArrayFields[$fieldName] = $title;
+            }
+            // If there is an other field -> add one more for the other field specification
+            if ($q->other == 'Y') {
+                $questionArrayFields[$fieldName . 'other'] = $title . ' - ' . $this->gT('Other');
             }
         }
-
-        $questionArrayTextOverview = array();
-        foreach ($questions as $q) {
-            if (isset($q->questionl10ns) && isset($q->questionl10ns[$sLanguage])) {
-                $questionArrayTextOverview[$q->title] = $q->questionl10ns[$sLanguage]->question;
-            } else {
-                $questionArrayTextOverview[$q->title] = $q->title;
-            }
-        }
+        ksort($questionArrayFields);
+        $questionArray = array_merge($questionArrayBasics, $questionArrayFields);
 
         $event->set(
             "surveysettings.{$this->id}",
@@ -467,7 +478,7 @@ class Lime_RabbitMQ extends PluginBase
                     ),
                     'questionArray_textoverview' => array(
                         'type' => 'select',
-                        'options' => $questionArrayTextOverview,
+                        'options' => $questionArray,
                         'htmlOptions' => array(
                             'multiple' => true,
                             'placeholder' => $this->gT("None"),
@@ -477,7 +488,7 @@ class Lime_RabbitMQ extends PluginBase
                             'placeholder' => $this->gT("None"),
                         ),
                         'label' => $this->gT('All Question / Table Fields that should get an text overview generated.'),
-                        'current' => $this->get('questionArray_textoverview', 'Survey', $surveyId, array_keys($questionArrayTextOverview)),
+                        'current' => $this->get('questionArray_textoverview', 'Survey', $surveyId, array_keys($questionArray)),
                     ),
                     /*
                      *      STATISTICS
