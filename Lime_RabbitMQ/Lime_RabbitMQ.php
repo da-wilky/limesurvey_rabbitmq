@@ -290,8 +290,9 @@ class Lime_RabbitMQ extends PluginBase
             return;
         }
         $exportAnswers = $this->_getSurveyField($surveyId, 'exportAnswers');
+        $exportTextoverview = $this->_getSurveyField($surveyId, 'exportTextoverview');
         $exportStatistics = $this->_getSurveyField($surveyId, 'exportStatistics');
-        if (!$exportAnswers && !$exportStatistics) {
+        if (!$exportAnswers && !$exportStatistics && !$exportTextoverview) {
             return;
         }
         $this->updateTable($surveyId);
